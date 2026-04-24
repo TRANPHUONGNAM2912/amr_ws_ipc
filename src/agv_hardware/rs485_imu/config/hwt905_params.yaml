@@ -1,0 +1,77 @@
+/**:
+  ros__parameters:
+    # Serial port (USB-to-RS485 adapter, typically /dev/ttyUSB0)
+    port: "/dev/ttyUSB0"
+
+    # Baud rate — must match the device setting.
+    # Factory default: 9600.
+    # Supported: 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600
+    baudrate: 230400
+
+    # Modbus slave address (decimal).
+    # Factory default: 0x50 = 80.  Valid range: 1–127.
+    device_addr: 80
+
+    # TF frame ID attached to the IMU
+    frame_id: "imu_link"
+
+    # Publish /imu/rpy (Vector3Stamped: x=roll, y=pitch, z=yaw).
+    # rpy_in_degrees: true → values in ° (easy to read); false → rad (REP-103 style).
+    # Does not change /imu/data (still quaternion + angular_velocity in rad/s).
+    publish_euler: true
+    rpy_in_degrees: true
+
+    # HWT905 yaw convention is CW-positive (compass);
+    # ROS REP-103 expects CCW-positive.
+    # true → negate quaternion.z and gyro_z so odom/TF matches ROS convention.
+    # false → publish raw sensor values (for debugging).
+    invert_yaw: false
+
+    # If true, build /imu/data.orientation from angle registers (0x3D–0x3F).
+    # If false, use the sensor quaternion registers Q0–Q3 (0x51–0x54).
+    use_angles_for_orientation: false
+
+    # Publishing frequency [Hz].
+    # Sensor bandwidth is configured at 98 Hz → set publish_rate ≤ 98.0.
+    publish_rate: 98.0
+
+    # Serial read timeout [s].
+    # At 230400 baud: 71 bytes × 10 bits / 230400 ≈ 3.1 ms → 0.02 s is sufficient.
+    read_timeout: 0.02
+
+    # ── Active device configuration (for reference, set via WitMotion tool) ──
+    # algorithm:  6-axis  (register 0x24 = 0x01 → gyro-integrated yaw,
+    #                      relative heading — magnetometer NOT used for yaw)
+    # bandwidth:  98 Hz   (register 0x1F = 0x02)
+    # baudrate:   230400  (register 0x04 = 0x07)
+
+    # ── Covariance matrices (row-major 3×3) ─────────────────────────────────
+    # Set the diagonal elements according to the HWT905 datasheet specs.
+    # If unknown, set all to 0.0 (nav2/EKF will treat them as zero variance).
+    #
+    # HWT905 specs:
+    #   Accelerometer stability: 0.005 g ≈ 0.049 m/s²  → variance ≈ 2.4e-3 (m/s²)²
+    #   Gyroscope stability:     0.05 °/s = 8.7e-4 rad/s → variance ≈ 7.6e-7 (rad/s)²
+    #   Roll/Pitch accuracy:     0.05°  = 8.7e-4 rad    → variance ≈ 7.6e-7 rad²
+    #   Yaw accuracy:            1.0°   = 1.75e-2 rad   → variance ≈ 3.0e-4 rad²
+
+    # Linear acceleration [m/s²]²
+    linear_acceleration_covariance: [
+      2.4e-3, 0.0,    0.0,
+      0.0,    2.4e-3, 0.0,
+      0.0,    0.0,    2.4e-3
+    ]
+
+    # Angular velocity [rad/s]²
+    angular_velocity_covariance: [
+      7.6e-7, 0.0,    0.0,
+      0.0,    7.6e-7, 0.0,
+      0.0,    0.0,    7.6e-7
+    ]
+
+    # Orientation [rad]²  (diagonal: roll, pitch, yaw)
+    orientation_covariance: [
+      7.6e-7, 0.0,    0.0,
+      0.0,    7.6e-7, 0.0,
+      0.0,    0.0,    3.0e-4
+    ]

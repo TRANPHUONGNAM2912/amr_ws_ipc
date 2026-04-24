@@ -1,0 +1,44 @@
+base_driver_node:
+  ros__parameters:
+
+    # ── Serial port ─────────────────────────────────────────────────────────
+    enable_rs485:      true
+    serial_port:       "/dev/ttyS4"
+    baudrate:          230400
+
+    # Seconds of RX silence before the driver closes and re-opens the port.
+    reconnect_timeout: 3.0
+
+    # ── Robot geometry ───────────────────────────────────────────────────────
+    # Distance between left and right wheel contact points (m)
+    wheel_separation:  0.371
+    # Wheel radius (m) — only used when use_rad_s is true
+    wheel_radius:      0.075
+    # Set true if STM32 expects wheel velocities in rad/s instead of m/s
+    use_rad_s:         false
+
+    # ── Timing ───────────────────────────────────────────────────────────────
+    # Control/publish rate (Hz). 50 Hz = half the IMU rate (98 Hz).
+    # robot_localization EKF handles asynchronous sensor inputs, so encoder
+    # corrections at 50 Hz interleave cleanly with IMU corrections at 98 Hz.
+    publish_rate:      50.0
+
+    # Zero cmd_vel after this many seconds without a new message (safety stop)
+    cmd_vel_timeout:   0.5
+
+    # Diagnostics publish interval (seconds, 0 to disable)
+    log_interval:      2.0
+
+    # ── Frame IDs ────────────────────────────────────────────────────────────
+    odom_frame_id:     "odom"
+    base_frame_id:     "base_link"
+
+    # ── Encoder noise covariance (for /wheel/odom twist.covariance) ──────────
+    # σ²(vx)   — forward velocity variance (m/s)²
+    # Typical value: 0.01 for a well-calibrated encoder at low speed.
+    cov_vx:    0.01
+
+    # σ²(vyaw) — yaw rate variance (rad/s)²
+    # Slightly larger because angular velocity estimation depends on
+    # the difference of two noisy wheel speeds.
+    cov_vyaw:  0.05

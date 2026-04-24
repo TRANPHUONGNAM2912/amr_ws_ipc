@@ -1,0 +1,10 @@
+/build/
+/install/
+/log/
+.vscode
+
+# Default: track only src/ and this .gitignore
+*
+!src/
+!src/**
+!.gitignore

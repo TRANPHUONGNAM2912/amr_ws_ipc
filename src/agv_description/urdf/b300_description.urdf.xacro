@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="b300_description">
+
+  <xacro:property name="wheel_separation_half" value="0.19" />
+  <xacro:property name="base_mass" value="50" />
+  <xacro:property name="wheel_mass" value="1.5" />
+  <xacro:property name="lidar_cylinder_length" value="0.03" />
+  <xacro:property name="lidar_mount_z" value="0.185" />
+
+
+  <xacro:property name="imu_mount_x"   value="-0.225" />
+  <xacro:property name="imu_mount_y"   value="-0.135" />
+  <xacro:property name="imu_mount_z"   value="0.0" />
+  <xacro:property name="imu_mount_rpy" value="0 0 0" />
+
+  <link name="base_footprint" />
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.023658 0.0 0.05074" rpy="0 0 0" />
+      <mass value="${base_mass}" />
+      <inertia
+        ixx="0.061849"
+        ixy="-1.6195E-05"
+        ixz="0.00019438"
+        iyy="0.18157"
+        iyz="1.7016E-06"
+        izz="0.23587" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/base_link.STL" />
+      </geometry>
+      <material name="light_black">
+        <color rgba="0.4 0.4 0.4 1.0" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="left_wheel_link">
+    <inertial>
+      <origin xyz="-1.6999E-12 -3.3705E-12 -0.004" rpy="0 0 0" />
+      <mass value="${wheel_mass}" />
+      <inertia
+        ixx="0.00091049"
+        ixy="2.2582E-08"
+        ixz="-4.4965E-13"
+        iyy="0.00091051"
+        iyz="4.5209E-13"
+        izz="0.0017047" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/left_wheel_link.STL" />
+      </geometry>
+      <material name="wheel_orange">
+        <color rgba="0.85 0.35 0.05 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/left_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <origin xyz="-0.0041198 ${wheel_separation_half} 0.06351" rpy="1.5708 -0.013329 3.1416" />
+    <parent link="base_link" />
+    <child link="left_wheel_link" />
+    <axis xyz="0 0 1" />
+  </joint>
+
+  <link name="right_wheel_link">
+    <inertial>
+      <origin xyz="-3.5217E-12 -1.3605E-12 -0.004" rpy="0 0 0" />
+      <mass value="${wheel_mass}" />
+      <inertia
+        ixx="0.00091052"
+        ixy="1.6013E-08"
+        ixz="-3.0403E-14"
+        iyy="0.00091048"
+        iyz="6.369E-13"
+        izz="0.0017047" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/right_wheel_link.STL" />
+      </geometry>
+      <material name="wheel_orange">
+        <color rgba="0.85 0.35 0.05 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/right_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <origin xyz="-0.0041198 -${wheel_separation_half} 0.06351" rpy="-1.5708 0 -3.1416" />
+    <parent link="base_link" />
+    <child link="right_wheel_link" />
+    <axis xyz="0 0 -1" />
+  </joint>
+
+  <link name="laser_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1" />
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://agv_description/meshes/lidar.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="lidar_black">
+        <color rgba="0.15 0.15 0.15 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.035" length="${lidar_cylinder_length}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="laser_link_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="laser_link" />
+    <origin xyz="0 0 ${lidar_mount_z}" rpy="0 0 0" />
+  </joint>
+
+  <!-- ─────────────────────────── IMU (HWT905) ─────────────────────────── -->
+  <link name="imu_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.03 0.03 0.01" />
+      </geometry>
+      <material name="imu_green">
+        <color rgba="0.1 0.8 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.03 0.03 0.01" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="imu_link_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <origin xyz="${imu_mount_x} ${imu_mount_y} ${imu_mount_z}"
+            rpy="${imu_mount_rpy}" />
+  </joint>
+
+</robot>
