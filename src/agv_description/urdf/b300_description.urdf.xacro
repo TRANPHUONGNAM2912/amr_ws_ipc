@@ -8,8 +8,8 @@
   <xacro:property name="lidar_mount_z" value="0.185" />
 
 
-  <xacro:property name="imu_mount_x"   value="-0.225" />
-  <xacro:property name="imu_mount_y"   value="-0.135" />
+  <xacro:property name="imu_mount_x"   value="0" />
+  <xacro:property name="imu_mount_y"   value="0" />
   <xacro:property name="imu_mount_z"   value="0.0" />
   <xacro:property name="imu_mount_rpy" value="0 0 0" />
 

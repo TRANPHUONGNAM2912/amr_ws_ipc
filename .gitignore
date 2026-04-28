@@ -2,9 +2,14 @@
 /install/
 /log/
 .vscode
+__pycache__/
+*.pyc
 
-# Default: track only src/ and this .gitignore
-*
-!src/
-!src/**
-!.gitignore
+# Generated TF frame graphs
+frames_*.gv
+frames_*.pdf
+
+# If you run colcon inside web/ by accident
+src/agv_bringup/web/build/
+src/agv_bringup/web/install/
+src/agv_bringup/web/log/

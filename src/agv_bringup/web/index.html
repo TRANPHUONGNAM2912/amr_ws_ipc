@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AGV Web Teleop</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/roslib/build/roslib.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <div>
+          <h1>AGV Web Teleop</h1>
+          <p class="sub">Giữ nút để chạy, thả nút để dừng (publish 0 lên <code>/cmd_vel</code>).</p>
+        </div>
+        <div class="status">
+          <span id="connDot" class="dot dot--disconnected" aria-hidden="true"></span>
+          <span id="connText">Disconnected</span>
+        </div>
+      </header>
+
+      <section class="card">
+        <div class="row">
+          <label class="field">
+            <span>ROSBridge WS</span>
+            <input id="wsUrl" type="text" value="" placeholder="ws://<ip>:9090" />
+          </label>
+          <label class="field">
+            <span>Topic</span>
+            <input id="topic" type="text" value="/cmd_vel" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label class="field">
+            <span>Linear X (m/s)</span>
+            <input id="lin" type="number" min="0" step="0.01" value="0.25" />
+          </label>
+          <label class="field">
+            <span>Angular Z (rad/s)</span>
+            <input id="ang" type="number" min="0" step="0.01" value="0.8" />
+          </label>
+          <label class="field">
+            <span>Publish Hz</span>
+            <input id="hz" type="number" min="1" step="1" value="20" />
+          </label>
+          <div class="actions">
+            <button id="btnConnect" class="btn btn--primary" type="button">Connect</button>
+            <button id="btnStop" class="btn btn--ghost" type="button">STOP</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="pad">
+          <div class="dpad" role="group" aria-label="Teleop buttons">
+            <button id="btnUp" class="dpad__btn dpad__btn--up" type="button">↑</button>
+            <button id="btnLeft" class="dpad__btn dpad__btn--left" type="button">←</button>
+            <button id="btnRight" class="dpad__btn dpad__btn--right" type="button">→</button>
+            <button id="btnDown" class="dpad__btn dpad__btn--down" type="button">↓</button>
+          </div>
+          <div class="hint">
+            <div><kbd>W</kbd> ↑ &nbsp; <kbd>S</kbd> ↓ &nbsp; <kbd>A</kbd> ← &nbsp; <kbd>D</kbd> →</div>
+            <div><kbd>Space</kbd> STOP</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="pad">
+          <div class="logTitle">Log</div>
+          <pre id="log" class="log" aria-live="polite"></pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+
