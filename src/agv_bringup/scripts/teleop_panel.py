@@ -5,7 +5,7 @@ import tkinter as tk
 
 import rclpy
 from rclpy.executors import SingleThreadedExecutor
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TwistStamped
 from rclpy.node import Node
 
 
@@ -31,7 +31,7 @@ class TeleopPanel(Node):
             self.get_parameter("wheel_separation").get_parameter_value().double_value
         )
 
-        self._pub = self.create_publisher(Twist, self._cmd_vel_topic, 10)
+        self._pub = self.create_publisher(TwistStamped, self._cmd_vel_topic, 10)
         self._timer = self.create_timer(
             1.0 / max(self._publish_hz, 1.0), self._on_timer
         )
@@ -52,13 +52,18 @@ class TeleopPanel(Node):
         if not active:
             return
 
-        msg = Twist()
-        msg.linear.x = float(vx)
-        msg.angular.z = float(wz)
+        msg = TwistStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "base_link"
+        msg.twist.linear.x = float(vx)
+        msg.twist.angular.z = float(wz)
         self._pub.publish(msg)
 
     def _publish_zero(self):
-        self._pub.publish(Twist())
+        msg = TwistStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "base_link"
+        self._pub.publish(msg)
 
     def set_command(self, vx: float, wz: float):
         with self._lock:

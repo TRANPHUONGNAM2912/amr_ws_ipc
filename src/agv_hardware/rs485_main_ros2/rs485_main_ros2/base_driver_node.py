@@ -7,7 +7,7 @@ Protocol  (CRC-16/Modbus, 13 bytes each direction):
   RX  STM32 → ROS2 : SOF[0x4F,0x44] + LEN[0x08] + vx(f32LE) + vyaw(f32LE) + CRC16
 
 Subscriptions:
-  /cmd_vel  [geometry_msgs/Twist]
+  /cmd_vel  [geometry_msgs/TwistStamped]
 
 Publications:
   /wheel/odom  [nav_msgs/Odometry]   — twist only: vx + vyaw, for robot_localization EKF
@@ -29,7 +29,7 @@ import time
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import TwistStamped
 from nav_msgs.msg import Odometry
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 
@@ -115,7 +115,7 @@ class BaseDriverNode(Node):
 
         # ── Publishers / subscribers ───────────────────────────────────────────
         self._sub_cmd = self.create_subscription(
-            Twist, 'cmd_vel', self._cb_cmd_vel, 10
+            TwistStamped, 'cmd_vel', self._cb_cmd_vel, 10
         )
         self._pub_odom = self.create_publisher(Odometry, 'wheel/odom', 10)
         self._pub_diag = self.create_publisher(DiagnosticArray, '/diagnostics', 10)
@@ -132,9 +132,9 @@ class BaseDriverNode(Node):
 
     # ── cmd_vel callback ───────────────────────────────────────────────────────
 
-    def _cb_cmd_vel(self, msg: Twist) -> None:
-        self._v = msg.linear.x
-        self._w = msg.angular.z
+    def _cb_cmd_vel(self, msg: TwistStamped) -> None:
+        self._v = msg.twist.linear.x
+        self._w = msg.twist.angular.z
         self._last_cmd_time = self.get_clock().now()
         self._cmd_count += 1
         if self._cmd_count == 1:

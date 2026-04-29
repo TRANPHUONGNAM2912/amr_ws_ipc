@@ -76,7 +76,7 @@ function connectOrDisconnect() {
     cmdVelTopic = new ROSLIB.Topic({
       ros,
       name: topicName,
-      messageType: "geometry_msgs/Twist",
+      messageType: "geometry_msgs/TwistStamped",
     });
     setConnected(true);
     log(`Connected to ${url}. Publishing to ${topicName}.`);
@@ -98,10 +98,20 @@ function connectOrDisconnect() {
 
 function publishOnce(linearX, angularZ) {
   if (!cmdVelTopic) return;
+  const now = Date.now();
   cmdVelTopic.publish(
     new ROSLIB.Message({
-      linear: { x: linearX, y: 0.0, z: 0.0 },
-      angular: { x: 0.0, y: 0.0, z: angularZ },
+      header: {
+        stamp: {
+          sec: Math.floor(now / 1000),
+          nanosec: (now % 1000) * 1000000,
+        },
+        frame_id: "base_link",
+      },
+      twist: {
+        linear: { x: linearX, y: 0.0, z: 0.0 },
+        angular: { x: 0.0, y: 0.0, z: angularZ },
+      },
     }),
   );
 }
