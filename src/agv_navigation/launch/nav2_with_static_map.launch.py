@@ -17,20 +17,10 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration("use_rviz")
     rviz_config = LaunchConfiguration("rviz_config")
 
-    amcl_file = pkg_share + "/config/localization/amcl.yaml"
-    controller_file = pkg_share + "/config/controller/controller_server.yaml"
-    local_costmap_file = pkg_share + "/config/costmap/local_costmap.yaml"
-    global_costmap_file = pkg_share + "/config/costmap/global_costmap.yaml"
-    nav2_core_file = pkg_share + "/config/common/nav2_core.yaml"
-    profile_file = pkg_share + "/config/profiles/b300_sim.yaml"
+    nav2_params_file = pkg_share + "/config/nav2_params.yaml"
 
     params_files = [
-        amcl_file,
-        controller_file,
-        local_costmap_file,
-        global_costmap_file,
-        nav2_core_file,
-        profile_file,
+        nav2_params_file,
     ]
 
     lifecycle_nodes = [

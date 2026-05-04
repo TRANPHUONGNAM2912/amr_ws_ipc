@@ -19,7 +19,7 @@ def generate_launch_description():
                  "laser_ip": "192.168.1.88",			# 传感器ip地址		
                  "laser_port": 8080,				# 传感器端口（固定为8080）
                  "measure_frequency_kHz": "200",		# 雷达测量频率
-                 "motor_speed": "20",				# 雷达转速
+                 "motor_speed": "30",				# 雷达转速
                  "point_sampling": "2",				# 重复采样点数
                  "filter_level": "2",				# 噪声过滤等级
                  "shadows_filter_level": 1,			# 防拖尾过滤等级
