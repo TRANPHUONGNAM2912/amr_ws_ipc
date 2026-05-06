@@ -123,9 +123,9 @@ controller_server:
       ay_max: 3.0
       ay_min: -3.0
       az_max: 3.5
-      vx_std: 0.2
+      vx_std: 0.4
       vy_std: 0.2
-      wz_std: 0.4
+      wz_std: 1.0
       vx_max: 0.5
       vx_min: -0.35
       vy_max: 0.5
@@ -136,8 +136,6 @@ controller_server:
       temperature: 0.3
       gamma: 0.015
       motion_model: "DiffDrive"
-      enforce_path_inversion: true
-      retry_attempt_limit: 3
       visualize: true
       publish_optimal_trajectory: true
       regenerate_noises: true
